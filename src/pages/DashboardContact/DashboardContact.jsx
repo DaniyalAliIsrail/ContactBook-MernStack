@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 import Buttonseemore from "../../components/button/Buttonseemore";
 import {
@@ -47,6 +48,37 @@ const DashboardContact = () => {
 
   const [update ,setUpdate] = useState(false)
   const handleupdate = () => setUpdate(!update)
+
+  const dashboardValid = async () => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      console.error('Token not found in localStorage');
+      return;
+    }
+  
+    try {
+      const res = await axios.get("http://localhost:8000/api/dashboardvalidate", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      console.log(res.data);
+    } catch (error) {
+      console.error('Error while validating dashboard:', error);
+    }
+  };
+  
+  useEffect(() => {
+    dashboardValid();
+  }, []);
+  
+
+  useEffect(()=>{
+    dashboardValid();
+  },[])
 
   return (
     <>

@@ -1,3 +1,5 @@
+
+
 import React, { useState } from "react";
 import {
   Navbar,
@@ -14,9 +16,9 @@ function NavList() {
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       <Typography as="li" variant="small" color="blue-gray" className="p-1 ">
         <NavLink
-          to="/home"
+          to="/"
           className="flex items-center text-lg hover:text-purple-600 text-neutral-300 tracking-tight transition-colors"
-          activeClassName="text-purple-600" >
+           >
           Home
         </NavLink>
       </Typography>
