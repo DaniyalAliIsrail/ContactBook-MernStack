@@ -15,7 +15,15 @@ import { NavbarSimple } from "../../components/navbar/Navbar";
 import { Card } from "@material-tailwind/react";
 import { Avatar } from "@material-tailwind/react";
 
-const TABLE_HEAD = ["profile","Name", "Email", "contact", "Date", "update", "Delete"];
+const TABLE_HEAD = [
+  "profile",
+  "Name",
+  "Email",
+  "contact",
+  "Date",
+  "update",
+  "Delete",
+];
 
 const TABLE_ROWS = [
   {
@@ -23,16 +31,11 @@ const TABLE_ROWS = [
     job: "Manager",
     date: "23/04/18",
   },
-  
+
   {
     name: "Michael Levi",
     job: "Developer",
     date: "24/12/08",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
   },
 ];
 
@@ -40,45 +43,80 @@ const DashboardContact = () => {
   let buttonText = {
     createcontact: "Create contact",
   };
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [loading , setLoading]  = useState(false)
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
 
   const [del, setDel] = React.useState(false);
   const handleDel = () => setDel(!del);
 
-  const [update ,setUpdate] = useState(false)
-  const handleupdate = () => setUpdate(!update)
+  const [update, setUpdate] = useState(false);
+  const handleupdate = () => setUpdate(!update);
+
+  const fileHandler=(e)=>{
+    setImageFile(e.target.files[0])
+  }
 
   const dashboardValid = async () => {
     const token = localStorage.getItem("token");
-  
     if (!token) {
-      console.error('Token not found in localStorage');
+      console.error("Token not found in localStorage");
       return;
     }
-  
     try {
-      const res = await axios.get("http://localhost:8000/api/dashboardvalidate", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-  
+      const res = await axios.get(
+        "http://localhost:8000/api/dashboardvalidate",
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       console.log(res.data);
     } catch (error) {
-      console.error('Error while validating dashboard:', error);
+      console.error("Error while validating dashboard:", error);
     }
   };
-  
+
   useEffect(() => {
     dashboardValid();
   }, []);
-  
 
-  useEffect(()=>{
-    dashboardValid();
-  },[])
+  //post submit handler
+  const postSubmitHandler = async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('contact', contact);
+    formData.append('image', imageFile);
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found in localStorage");
+    }
+    try {
+      setLoading(true)
+      const res = await axios.post('http://localhost:8000/api/posts', formData, {
+        headers: {
+          authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('post', res.data);
+      setLoading(false)
+    } catch (error) {
+      console.error('error', error);
+    }
+  };
 
   return (
     <>
@@ -115,36 +153,62 @@ const DashboardContact = () => {
                 />
               </svg>
             </div>
+
+            <form onSubmit={postSubmitHandler}>          
             <DialogBody>
               <Typography
                 className="mb-5 -mt-7 text-[0.9rem] "
                 color="gray"
-                variant="lead">
+                variant="lead"
+              >
                 Add new contact in your contact list
               </Typography>
-
               <div className="grid gap-3">
-                <Input color="purple" label="Name" />
-                <Input color="purple" label="Email" />
-                <Input color="purple" label="contact" />
+                <Input
+              
+                  onChange={(e) => setName(e.target.value)}
+                  color="purple"
+                  label="Name"
+                />
+                <Input
+                // value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  color="purple"
+                  label="Email"
+                />
+
+                <Input
+                // value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                  color="purple"
+                  label="contact"
+                />
                 <Button
                   variant="gradient"
                   size="sm"
                   color="purple"
                   className="flex items-start"
                 >
-                  <input type="file" className="ms-0 mr-auto" />
-                </Button>
+                  <input 
+                  // value={imageFile} 
+                  onChange={(e) =>{fileHandler(e)}} type="file" className="ms-0 mr-auto" />   
+                  </Button>    
               </div>
             </DialogBody>
             <DialogFooter className="space-x-2">
               <Button variant="text" color="gray" onClick={handleOpen}>
                 cancel
               </Button>
-              <Button variant="gradient" color="purple" onClick={handleOpen}>
-                Create contact
-              </Button>
+              {
+                (loading? <Button type="submit" variant="gradient" color="purple" >
+                Loading......
+              </Button>: <Button type="submit" variant="gradient" color="purple" >
+                Create List
+              </Button>)
+              }
+             
             </DialogFooter>
+            </form>
           </Dialog>
         </div>
 
@@ -208,7 +272,8 @@ const DashboardContact = () => {
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="font-normal">
+                          className="font-normal"
+                        >
                           {name}
                         </Typography>
                       </td>
@@ -298,7 +363,8 @@ const DashboardContact = () => {
               <Typography
                 className="mb-5 -mt-7 text-[0.9rem] "
                 color="gray"
-                variant="lead">
+                variant="lead"
+              >
                 update contact in your contact list
               </Typography>
 
@@ -325,8 +391,6 @@ const DashboardContact = () => {
               </Button>
             </DialogFooter>
           </Dialog>
-
-
 
           {/* Delete pop */}
           <Dialog size={"xs"} open={del} handler={handleDel}>

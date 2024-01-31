@@ -48,7 +48,7 @@ const Register = () => {
         );
         console.log(res.data);
         setLoading(false)
-        history("/signup")
+        history("/login")
 
       } 
       catch (err) {
