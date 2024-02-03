@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import {
   Navbar,
@@ -11,9 +9,13 @@ import { Bars2Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, NavLink } from "react-router-dom";
 
 function NavList() {
-  
+  const token = localStorage.getItem("token")
+  const logoutHandler = () =>{
+    localStorage.removeItem("token")
+    window.location.reload()
+  }
   return (
-    <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+    <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 ">
       <Typography as="li" variant="small" color="blue-gray" className="p-1 ">
         <NavLink
           to="/"
@@ -31,21 +33,36 @@ function NavList() {
           Contact
         </Link>
       </Typography>
-
-      <Typography
+      {
+        token ? ( <Typography
+          as="li"
+          variant="small"
+          color="blue-gray"
+          className="p-1 font-medium"
+          onClick={logoutHandler}
+        >
+           <Link
+            to="/"
+            className="flex items-center bg-purple-600 hover:bg-white hover:border-purple-500 hover:text-black
+            transition-colors text-lg border-2  border-purple-500 text-white  py-1 px-3 rounded-md ">
+            Logout
+          </Link>
+        </Typography>) : ( <Typography
         as="li"
         variant="small"
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <Link
+         <Link
           to="/login"
           className="flex items-center bg-purple-600 hover:bg-white hover:border-purple-500 hover:text-black
-          transition-colors text-lg border-2  border-purple-500 text-white  py-1 px-3 rounded-md "
-        >
+          transition-colors text-lg border-2  border-purple-500 text-white  py-1 px-3 rounded-md ">
           Login
         </Link>
-      </Typography>
+      </Typography>)
+      }
+
+     
     </ul>
   );
 }
@@ -63,9 +80,9 @@ export function NavbarSimple() {
       window.removeEventListener("resize", handleWindowResize);
     };
   }, []);
-
+  
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-6 py-3 mt-2 ">
+    <Navbar className="mx-auto max-w-screen-xl px-6 py-3 mt-2 shadow-sm ">
       <div className="flex items-center justify-between ">
         <Typography className="mr-4 cursor-pointer py-1.5 text-2xl font-medium text-black">
           Contact <span className="text-purple-700 tracking-tight">Book</span>

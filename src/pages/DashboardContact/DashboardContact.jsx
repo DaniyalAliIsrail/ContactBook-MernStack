@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 import Buttonseemore from "../../components/button/Buttonseemore";
 import {
   Button,
@@ -14,7 +13,6 @@ import {
 import { NavbarSimple } from "../../components/navbar/Navbar";
 import { Card } from "@material-tailwind/react";
 import { Avatar } from "@material-tailwind/react";
-
 const TABLE_HEAD = [
   "profile",
   "Name",
@@ -24,7 +22,6 @@ const TABLE_HEAD = [
   "update",
   "Delete",
 ];
-
 const TABLE_ROWS = [
   {
     name: "John Michael",
@@ -38,7 +35,6 @@ const TABLE_ROWS = [
     date: "24/12/08",
   },
 ];
-
 const DashboardContact = () => {
   let buttonText = {
     createcontact: "Create contact",
@@ -62,10 +58,12 @@ const DashboardContact = () => {
   // console.log(updateContact);
   // console.log(updateId);
   //close update modal
-  const [updateModal, setUpdateModal] = useState(false);
+  // const [updateModal, setUpdateModal] = useState(false);
+
   const closeUpdateModal = () => {
     setUpdate(!update);
   };
+
   // ALl POST STATE
   const [allData, setAllData] = useState([]);
   // console.log(allData);
@@ -85,7 +83,7 @@ const DashboardContact = () => {
   const [update, setUpdate] = useState(false);
 
   const handleupdate = (item) => {
-    console.log(item);
+    // console.log(item);
     setUpdateName(item.name);
     setUpdateEmail(item.email);
     setUpdateContact(item.contact);
@@ -101,8 +99,8 @@ const DashboardContact = () => {
         email: updateEmail,
         contact: updateContact,
       };
-      console.log(objTOSend);
-      console.log(updateId);
+      // console.log(objTOSend);
+      // console.log(updateId);
       const res = await axios.put(
         `http://localhost:8000/api/updatepost/${updateId}`,
         objTOSend
@@ -178,6 +176,10 @@ const DashboardContact = () => {
       );
       // console.log("post", res.data);
       setLoading(false);
+      setName("")
+      setEmail("")
+      setContact("")
+      setImageFile("")
       allPostHandler();
     } catch (error) {
       console.error("error", error);
@@ -236,9 +238,6 @@ const DashboardContact = () => {
   const [searchQueryLength, setSearchQueryLength] = useState(0);
  const [serchLoading,setSearchLoading] = useState(false)  
 
-  console.log(searchQueryLength);
- 
- 
   const handleSearch = async () => {
     try {
       setSearchLoading(true);
@@ -262,6 +261,7 @@ const DashboardContact = () => {
       
     }
   };
+
   return (
     <>
       <NavbarSimple />
@@ -312,19 +312,27 @@ const DashboardContact = () => {
                     onChange={(e) => setName(e.target.value)}
                     color="purple"
                     label="Name"
+                    type="text"
+                    value={name}
                   />
                   <Input
-                    // value={email}
+                   
                     onChange={(e) => setEmail(e.target.value)}
                     color="purple"
                     label="Email"
+                    type="email"
+                    value={email}
+
                   />
 
                   <Input
-                    // value={contact}
+                    
                     onChange={(e) => setContact(e.target.value)}
                     color="purple"
                     label="contact"
+                    type="number"
+                    value={contact}
+
                   />
                   <Button
                     variant="gradient"
@@ -333,12 +341,13 @@ const DashboardContact = () => {
                     className="flex items-start"
                   >
                     <input
-                      // value={imageFile}
                       onChange={(e) => {
                         fileHandler(e);
                       }}
                       type="file"
                       className="ms-0 mr-auto"
+                      
+
                     />
                   </Button>
                 </div>
@@ -377,6 +386,10 @@ const DashboardContact = () => {
               setSearchQueryLength(e.target.value.length);
             }}
           ></input>
+          
+      {errorMessage && <p style={{ color: 'red', fontSize:'10px' }}> No result found</p>}
+
+         
 
           {
             serchLoading ? (<button className="flex flex-row items-center justify-center min-w-[100px] px-4 rounded-full font-sm tracking-wide border disabled:cursor-not-allowed disabled:opacity-50 ease-in-out duration-150 text-base bg-purple-500 text-white  border-transparent py-1.5 h-[38px] -mr-3 transform hover:scale-95 transition-transform"
@@ -545,20 +558,22 @@ const DashboardContact = () => {
                            onChange={(e) => setUpdateName(e.target.value)}
                            color="purple"
                            label="Name"
+                           type="text"
                          />
                          <Input
                            value={updateEmail}
                            onChange={(e) => setUpdateEmail(e.target.value)}
                            color="purple"
                            label="Email"
+                           type="email"
                          />
                          <Input
                            value={updateContact}
                            onChange={(e) => setUpdateContact(e.target.value)}
                            color="purple"
                            label="contact"
+                           type="number"
                          />
-                        
                        </div>
                      </DialogBody>
                      <DialogFooter className="space-x-2">
@@ -641,7 +656,7 @@ const DashboardContact = () => {
                  </tbody>
                </table>
              </Card>
-         </div>) : ( <div className="border border-red-600">
+         </div>) : ( <div>
           <Card className="h-full w-full pt-3 mt-5 overflow-y-scroll overflow-x-scroll border-green-700">
             <table className="w-full min-w-max table-auto text-left">
               <thead>
@@ -663,6 +678,7 @@ const DashboardContact = () => {
                 </tr>
               </thead>
               <tbody>
+                
                 {allData.map((item, index) => {
                   const isLast = index === TABLE_ROWS.length - 1;
                   const classes = isLast
@@ -901,32 +917,6 @@ const DashboardContact = () => {
       
 
         </div>
-
-       
-       
-       
-
-     
-      <div>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {/* {alert(errorMessage)} */}
-        <h3>Search Results:</h3>
-        <ul>
-          {searchResults.map((post) => (
-            <li key={post._id}>
-              <p>Name: {post.name}</p>
-              <p>Email: {post.email}</p>
-              <p>contact: {post.contact}</p>
-              <p>Date: {post.times}</p>
-              {/* <img src={post.imageUrl} alt="Post Image" /> */}
-            </li>
-          ))}
-        </ul>
-
-
-
-      
-      </div>
     </>
   );
 };

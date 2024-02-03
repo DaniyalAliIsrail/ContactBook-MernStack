@@ -48,8 +48,11 @@ const Register = () => {
         );
         console.log(res.data);
         setLoading(false)
+        setName("")
+        setEmail("")
+        setPassword("")
+        setCpassword("")
         history("/login")
-
       } 
       catch (err) {
         alert(err.response.data.message); 
@@ -76,6 +79,8 @@ const Register = () => {
                   placeholder="Enter Your full name"
                   size="lg"
                   onChange={(e) => setName(e.target.value)}
+                  type="text"
+                  value={fname}
                 />
               </div>
 
@@ -86,6 +91,8 @@ const Register = () => {
                   placeholder="Enter Your Email"
                   size="lg"
                   onChange={(e) => setEmail(e.target.value)}
+                  type={email}
+                  value={email}
                 />
               </div>
               <div className="my-5 relative">
@@ -96,6 +103,7 @@ const Register = () => {
                   size="lg"
                   type={isText ? "text" : "password"}
                   onChange={(e) => setPassword(e.target.value)}
+                  value={password}
                 />
                 <p
                   onClick={handleText}
@@ -113,6 +121,7 @@ const Register = () => {
                   size="lg"
                   type={isText ? "text" : "password"}
                   onChange={(e) => setCpassword(e.target.value)}
+                  value={cpassword}
                 />
                 <p
                   onClick={handleText}

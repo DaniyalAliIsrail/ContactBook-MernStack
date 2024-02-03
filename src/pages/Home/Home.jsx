@@ -6,7 +6,10 @@ const Home = () => {
   return (
   <>
    <NavbarSimple/>
-    <HeroSec/>
+   <div className='mt-18'>
+   <HeroSec/>
+
+   </div>
   </>
   )
 }

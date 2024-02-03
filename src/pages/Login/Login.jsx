@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import {  Input } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { useNavigate } from 'react-router-dom';
-
-
-// import { Button } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -37,14 +34,10 @@ const Login = () => {
     }
     }
   return (
-    <>
-      
+    <> 
       <div className="outer-box flex items-center justify-center gap-10 w-full h-screen">
         <div
-          className="inner-box border border-purple-400 rounded-lg  w-[400px] h-auto bg-gradient-to-tl from-opacity-100 to-opacity-50 via-opacity-100 backdrop-blur-9
-shadow-lg
-z-2"
-        >
+          className="inner-box border border-purple-400 rounded-lg  w-[400px] h-auto bg-gradient-to-tl from-opacity-100 to-opacity-50 via-opacity-100 backdrop-blur-9 shadow-lg z-2">
           <div className="header-login">
             <h1 className="sm:text-2xl lg:text-4xl lg:font-bold text-center py-4 text-purple-500">
               Login
@@ -87,9 +80,7 @@ z-2"
                   Login
                 </button>
                 }
-                
               </div>
-           
             </form>
           </div>
         </div>
