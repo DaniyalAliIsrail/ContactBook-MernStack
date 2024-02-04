@@ -23,7 +23,9 @@ const Login = () => {
     }
     setLoading(true)
     try{
+      // const res = await axios.post("http://localhost:8000/api/login",objTosend);
       const res = await axios.post("http://localhost:8000/api/login",objTosend);
+
       console.log(res.data);
       localStorage.setItem("token",res.data.token);
       history("/dashboard")

@@ -46,6 +46,10 @@ const Register = () => {
           "http://localhost:8000/api/signup",
           objToSend
         );
+        // const res = await axios.post(
+        //   "https://gentle-ray-garb.cyclic.app/api/signup",
+        //   objToSend
+        // );
         console.log(res.data);
         setLoading(false)
         setName("")

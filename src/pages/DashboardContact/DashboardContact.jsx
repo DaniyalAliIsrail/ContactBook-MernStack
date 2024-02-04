@@ -13,6 +13,7 @@ import {
 import { NavbarSimple } from "../../components/navbar/Navbar";
 import { Card } from "@material-tailwind/react";
 import { Avatar } from "@material-tailwind/react";
+// import BaseUrl from "../../config";
 const TABLE_HEAD = [
   "profile",
   "Name",
@@ -99,7 +100,7 @@ const DashboardContact = () => {
         email: updateEmail,
         contact: updateContact,
       };
-      // console.log(objTOSend);
+      console.log(objTOSend);
       // console.log(updateId);
       const res = await axios.put(
         `http://localhost:8000/api/updatepost/${updateId}`,
@@ -164,9 +165,7 @@ const DashboardContact = () => {
     }
     try {
       setLoading(true);
-      const res = await axios.post(
-        "http://localhost:8000/api/posts",
-        formData,
+      const res = await axios.post(`http://localhost:8000/api/posts`,formData ,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -174,7 +173,7 @@ const DashboardContact = () => {
           },
         }
       );
-      // console.log("post", res.data);
+      console.log("post", res.data);
       setLoading(false);
       setName("")
       setEmail("")
@@ -182,7 +181,7 @@ const DashboardContact = () => {
       setImageFile("")
       allPostHandler();
     } catch (error) {
-      console.error("error", error);
+      // console.error("error", error);
       setLoading(false);
     }
   };
