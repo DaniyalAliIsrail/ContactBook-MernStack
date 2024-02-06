@@ -13,7 +13,7 @@ import {
 import { NavbarSimple } from "../../components/navbar/Navbar";
 import { Card } from "@material-tailwind/react";
 import { Avatar } from "@material-tailwind/react";
-// import BaseUrl from "../../config";
+
 const TABLE_HEAD = [
   "profile",
   "Name",
@@ -22,19 +22,6 @@ const TABLE_HEAD = [
   "times",
   "Date",
   "Delete",
-];
-const TABLE_ROWS = [
-  {
-    name: "John Michael",
-    job: "Manager",
-    date: "23/04/18",
-  },
-
-  {
-    name: "Michael Levi",
-    job: "Developer",
-    date: "24/12/08",
-  },
 ];
 const DashboardContact = () => {
   let buttonText = {
@@ -54,12 +41,7 @@ const DashboardContact = () => {
   const [updateContact, setUpdateContact] = useState("");
   const [updateId, setUpdateId] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
-  // console.log(updateName);
-  // console.log(updateEmail);
-  // console.log(updateContact);
-  // console.log(updateId);
-  //close update modal
-  // const [updateModal, setUpdateModal] = useState(false);
+;
 
   const closeUpdateModal = () => {
     setUpdate(!update);
@@ -477,7 +459,7 @@ const DashboardContact = () => {
                              {item.contact}
                            </Typography>
                          </td>
-                         
+
                          <td className={classes}>
                         <Typography
                           variant="small"
