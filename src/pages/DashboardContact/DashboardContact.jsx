@@ -23,6 +23,19 @@ const TABLE_HEAD = [
   "Date",
   "Delete",
 ];
+const TABLE_ROWS = [
+  {
+    name: "John Michael",
+    job: "Manager",
+    date: "23/04/18",
+  },
+
+  {
+    name: "Michael Levi",
+    job: "Developer",
+    date: "24/12/08",
+  },
+];
 const DashboardContact = () => {
   let buttonText = {
     createcontact: "Create contact",
@@ -41,7 +54,12 @@ const DashboardContact = () => {
   const [updateContact, setUpdateContact] = useState("");
   const [updateId, setUpdateId] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
-;
+  // console.log(updateName);
+  // console.log(updateEmail);
+  // console.log(updateContact);
+  // console.log(updateId);
+  //close update modal
+  // const [updateModal, setUpdateModal] = useState(false);
 
   const closeUpdateModal = () => {
     setUpdate(!update);
