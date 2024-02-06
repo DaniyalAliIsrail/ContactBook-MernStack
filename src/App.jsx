@@ -2,11 +2,11 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import DashboardContact from './pages/DashboardContact/DashboardContact'
 import Register from './pages/Register/Register'
-import Login from './pages/Login/Login'
-import Home from './pages/home/Home'
-import PageNotfound from './pages/Notfound/PageNotfound'
-import Protectedroutes from '../routes/protectedroutes'
-import AuthenticateRoute from '../routes/AuthenticateRoute'
+import Login from './pages/Login/Login.jsx'
+import Home from './pages/home/Home.jsx'
+import PageNotfound from './pages/Notfound/PageNotfound.jsx'
+import Protectedroutes from '../routes/protectedroutes.jsx'
+import AuthenticateRoute from '../routes/AuthenticateRoute.jsx'
 
 function App() {
   return (
