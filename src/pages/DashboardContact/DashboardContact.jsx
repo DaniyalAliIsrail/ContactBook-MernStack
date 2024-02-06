@@ -19,8 +19,8 @@ const TABLE_HEAD = [
   "Name",
   "Email",
   "contact",
+  "times",
   "Date",
-  "update",
   "Delete",
 ];
 const TABLE_ROWS = [
@@ -103,7 +103,7 @@ const DashboardContact = () => {
       console.log(objTOSend);
       // console.log(updateId);
       const res = await axios.put(
-        `http://localhost:8000/api/updatepost/${updateId}`,
+        `https://contactbookbackend-production.up.railway.app/api/updatepost/${updateId}`,
         objTOSend
       );
       console.log(res.data);
@@ -126,7 +126,7 @@ const DashboardContact = () => {
     }
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/dashboardvalidate",
+        "https://contactbookbackend-production.up.railway.app/api/dashboardvalidate",
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -142,7 +142,6 @@ const DashboardContact = () => {
 
   useEffect(() => {
     dashboardValid();
-    allPostHandler();
   }, []);
 
   useEffect(() => {
@@ -157,7 +156,7 @@ const DashboardContact = () => {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("contact", contact);
-    formData.append("image", imageFile);
+    formData.append("imageFile", imageFile);
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -165,7 +164,7 @@ const DashboardContact = () => {
     }
     try {
       setLoading(true);
-      const res = await axios.post(`http://localhost:8000/api/posts`,formData ,
+      const res = await axios.post('https://contactbookbackend-production.up.railway.app/api/posts',formData ,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -193,7 +192,7 @@ const DashboardContact = () => {
       return;
     }
     try {
-      const res = await axios.get("http://localhost:8000/api/allpost", {
+      const res = await axios.get("https://contactbookbackend-production.up.railway.app/api/allpost", {
         headers: {
           authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -215,7 +214,7 @@ const DashboardContact = () => {
     }
     try {
       const res = await axios.delete(
-        `http://localhost:8000/api/delpost/${id}`,
+        `https://contactbookbackend-production.up.railway.app/api/delpost/${id}`,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -245,7 +244,7 @@ const DashboardContact = () => {
         console.error("Token not found in localStorage");
         return;
       }
-      const response = await axios.get(`http://localhost:8000/api/search-posts?search=${searchQuery}`, {
+      const response = await axios.get(`https://contactbookbackend-production.up.railway.app/api/search-posts?search=${searchQuery}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -441,7 +440,7 @@ const DashboardContact = () => {
                        <tr key={index}>
                          <td className={classes}>
                            <Avatar
-                             src={item.imageUrl}
+                             src={item.imageFile}
                              alt="avatar"
                              color="purple"
                              withBorder={true}
@@ -478,16 +477,17 @@ const DashboardContact = () => {
                              {item.contact}
                            </Typography>
                          </td>
-   
+                         
                          <td className={classes}>
-                           <Typography
-                             variant="small"
-                             color="blue-gray"
-                             className="font-normal"
-                           >
-                             {item.times}
-                           </Typography>
-                         </td>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {item.times}
+                        </Typography>
+                      </td>
+                    
                          <td className={classes}>
                            <Typography
                              as="a"
@@ -688,7 +688,7 @@ const DashboardContact = () => {
                     <tr key={index}>
                       <td className={classes}>
                         <Avatar
-                          src={item.imageUrl}
+                          src={item.imageFile}
                           alt="avatar"
                           color="purple"
                           withBorder={true}
@@ -735,6 +735,8 @@ const DashboardContact = () => {
                           {item.times}
                         </Typography>
                       </td>
+
+                   
                       <td className={classes}>
                         <Typography
                           as="a"

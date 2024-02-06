@@ -42,14 +42,19 @@ const Register = () => {
     } else {
       setLoading(true);
       try {
-        const res = await axios.post(
-          "http://localhost:8000/api/signup",
-          objToSend
-        );
+        // const res = await axios.post(
+        //   "http://localhost:8000/api/signup",
+        //   objToSend
+        // );
         // const res = await axios.post(
         //   "https://gentle-ray-garb.cyclic.app/api/signup",
         //   objToSend
         // );
+        const res = await axios.post(
+          "https://contactbookbackend-production.up.railway.app/api/signup",
+          objToSend
+        );
+      
         console.log(res.data);
         setLoading(false)
         setName("")
