@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import DashboardContact from './pages/DashboardContact/DashboardContact'
-import Register from './pages/Register/Register'
+import DashboardContact from './pages/DashboardContact/DashboardContact.jsx'
+import Register from './pages/Register/Register.jsx'
 import Login from './pages/Login/Login.jsx'
-import Home from './pages/Home/Home.jsx'
+import Home from "./pages/Home/Home.jsx"
 import PageNotfound from './pages/Notfound/PageNotfound.jsx'
 import Protectedroutes from '../routes/protectedroutes.jsx'
 import AuthenticateRoute from '../routes/AuthenticateRoute.jsx'
