@@ -274,7 +274,7 @@ const DashboardContact = () => {
           <div>
             <Buttonseemore onClick={handleOpen} buttonText={buttonText} />
           </div>
-          <Dialog open={open} size="xs" handler={handleOpen}>
+          {/* <Dialog open={open} size="xs" handler={handleOpen}>
             <div className="flex items-center justify-between">
               <DialogHeader className="flex flex-col items-start">
                 <Typography className=" text-base font-[10px]" variant="h4">
@@ -305,13 +305,14 @@ const DashboardContact = () => {
                 >
                   Add new contact in your contact list
                 </Typography>
-                <div className="grid gap-3">
+                <div className="grid gap-3 ">
                   <Input
                     onChange={(e) => setName(e.target.value)}
                     color="purple"
                     label="Name"
                     type="text"
                     value={name}
+                    className="w-100"
                   />
                   <Input
                    
@@ -365,7 +366,94 @@ const DashboardContact = () => {
                 )}
               </DialogFooter>
             </form>
-          </Dialog>
+          </Dialog> */}
+
+<Dialog open={open} size="xs" handler={handleOpen}>
+  <div className="flex items-center justify-between">
+    <DialogHeader className="flex flex-col items-start">
+      <Typography className="text-base font-[0.6rem]" variant="h4">
+        Create Contact
+      </Typography>
+    </DialogHeader>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="mr-3 h-5 w-5"
+      onClick={handleOpen}
+    >
+      <path
+        fillRule="evenodd"
+        d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+        clipRule="evenodd"
+      />
+    </svg>
+  </div>
+
+  <form onSubmit={postSubmitHandler} className="flex flex-col gap-3">
+    <DialogBody>
+      <Typography
+        className="mb-5 mt-0 text-[0.9rem] text-gray"
+        variant="lead"
+      >
+        Add new contact to your contact list
+      </Typography>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <Input
+          onChange={(e) => setName(e.target.value)}
+          color="purple"
+          label="Name"
+          type="text"
+          value={name}
+          
+        />
+        <Input
+          onChange={(e) => setEmail(e.target.value)}
+          color="purple"
+          label="Email"
+          type="email"
+          value={email}
+        />
+        <Input
+          onChange={(e) => setContact(e.target.value)}
+          color="purple"
+          label="Contact"
+          type="number"
+          value={contact}
+        />
+        <Button
+          variant="gradient"
+          size="sm"
+          color="purple"
+          className="flex items-start"
+        >
+          <input
+            onChange={(e) => {
+              fileHandler(e);
+            }}
+            type="file"
+            className="ms-0 mr-auto"
+          />
+        </Button>
+      </div>
+    </DialogBody>
+    <DialogFooter className="flex items-center justify-between">
+      <Button variant="text" color="gray" onClick={handleOpen}>
+        Cancel
+      </Button>
+      {loading ? (
+        <Button type="submit" variant="gradient" color="purple">
+          Loading......
+        </Button>
+      ) : (
+        <Button type="submit" variant="gradient" color="purple">
+          Create List
+        </Button>
+      )}
+    </DialogFooter>
+  </form>
+</Dialog>
+
         </div>
 
         {/* Search Bar */}
