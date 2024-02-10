@@ -277,7 +277,7 @@ const DashboardContact = () => {
           {/* <Dialog open={open} size="xs" handler={handleOpen}>
             <div className="flex items-center justify-between">
               <DialogHeader className="flex flex-col items-start">
-                <Typography className=" text-base font-[10px]" variant="h4">
+                <Typography className=" text-base font-[0.9rem]" variant="h4">
                   Create Contact
                 </Typography>
               </DialogHeader>
@@ -296,7 +296,7 @@ const DashboardContact = () => {
               </svg>
             </div>
 
-            <form onSubmit={postSubmitHandler}>
+            <form className="w-full, sm:w-auto" onSubmit={postSubmitHandler}>
               <DialogBody>
                 <Typography
                   className="mb-5 -mt-7 text-[0.9rem] "
@@ -312,7 +312,7 @@ const DashboardContact = () => {
                     label="Name"
                     type="text"
                     value={name}
-                    className="w-100"
+              
                   />
                   <Input
                    
@@ -368,6 +368,9 @@ const DashboardContact = () => {
             </form>
           </Dialog> */}
 
+
+
+
 <Dialog open={open} size="xs" handler={handleOpen}>
   <div className="flex items-center justify-between">
     <DialogHeader className="flex flex-col items-start">
@@ -398,14 +401,13 @@ const DashboardContact = () => {
       >
         Add new contact to your contact list
       </Typography>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-3">
         <Input
           onChange={(e) => setName(e.target.value)}
           color="purple"
           label="Name"
           type="text"
           value={name}
-          
         />
         <Input
           onChange={(e) => setEmail(e.target.value)}
@@ -425,14 +427,12 @@ const DashboardContact = () => {
           variant="gradient"
           size="sm"
           color="purple"
-          className="flex items-start"
         >
           <input
             onChange={(e) => {
               fileHandler(e);
             }}
             type="file"
-            className="ms-0 mr-auto"
           />
         </Button>
       </div>
