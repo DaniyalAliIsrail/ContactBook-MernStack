@@ -51,7 +51,7 @@ const Register = () => {
         //   objToSend
         // );
         const res = await axios.post(
-          "https://contactbookbackend-production.up.railway.app/api/signup",
+          "https://contact-book-backend-gamma.vercel.app/api/signup",
           objToSend
         );
       

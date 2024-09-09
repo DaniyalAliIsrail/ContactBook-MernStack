@@ -24,7 +24,7 @@ const Login = () => {
     setLoading(true)
     try{
       // const res = await axios.post("http://localhost:8000/api/login",objTosend);
-      const res = await axios.post("https://contactbookbackend-production.up.railway.app/api/login",objTosend);
+      const res = await axios.post("https://contact-book-backend-gamma.vercel.app/api/login",objTosend);
 
       console.log(res.data);
       localStorage.setItem("token",res.data.token);

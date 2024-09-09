@@ -7,22 +7,24 @@ import Home from "./pages/Home/Home.jsx"
 import PageNotfound from './pages/Notfound/PageNotfound.jsx'
 import Protectedroutes from '../routes/Protectedroutes.jsx'
 import AuthenticateRoute from '../routes/AuthenticateRoute.jsx'
-
 function App() {
   return (
     <>
       <Routes>
+
       <Route path='/' element={<Home/>} />
+      <Route path='*' element={<PageNotfound/>}/>
+
       <Route element={<AuthenticateRoute/>} >
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
-        <Route path='*' element={<PageNotfound/>}/>
       </Route>
+
         <Route element={<Protectedroutes/>}>
         <Route path='/dashboard' element={<DashboardContact/>} />
         </Route>
+
       </Routes>
-      
     </>
 
    
