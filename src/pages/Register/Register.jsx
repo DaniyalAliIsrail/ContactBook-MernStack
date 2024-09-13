@@ -4,7 +4,6 @@ import { Button } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 const Register = () => {
   const [fname, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -51,7 +50,7 @@ const Register = () => {
         //   objToSend
         // );
         const res = await axios.post(
-          "https://contact-book-backend-gamma.vercel.app/api/signup",
+          "https://contact-book-backend-97yv.vercel.app/api/signup",
           objToSend
         );
       

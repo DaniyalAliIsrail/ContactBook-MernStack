@@ -103,7 +103,7 @@ const DashboardContact = () => {
       console.log(objTOSend);
       // console.log(updateId);
       const res = await axios.put(
-        `https://contactbookbackend-production.up.railway.app/api/updatepost/${updateId}`,
+        `https://contact-book-backend-97yv.vercel.app/api/updatepost/${updateId}`,
         objTOSend
       );
       console.log(res.data);
@@ -126,7 +126,7 @@ const DashboardContact = () => {
     }
     try {
       const res = await axios.get(
-        "https://contactbookbackend-production.up.railway.app/api/dashboardvalidate",
+        "https://contact-book-backend-97yv.vercel.app/api/dashboardvalidate",
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -164,7 +164,7 @@ const DashboardContact = () => {
     }
     try {
       setLoading(true);
-      const res = await axios.post('https://contactbookbackend-production.up.railway.app/api/posts',formData ,
+      const res = await axios.post('https://contact-book-backend-97yv.vercel.app/api/post',formData ,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -192,7 +192,7 @@ const DashboardContact = () => {
       return;
     }
     try {
-      const res = await axios.get("https://contactbookbackend-production.up.railway.app/api/allpost", {
+      const res = await axios.get("https://contact-book-backend-97yv.vercel.app/api/allpost", {
         headers: {
           authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -214,7 +214,7 @@ const DashboardContact = () => {
     }
     try {
       const res = await axios.delete(
-        `https://contactbookbackend-production.up.railway.app/api/delpost/${id}`,
+        `https://contact-book-backend-97yv.vercel.app/api/delpost/${id}`,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -244,7 +244,7 @@ const DashboardContact = () => {
         console.error("Token not found in localStorage");
         return;
       }
-      const response = await axios.get(`https://contactbookbackend-production.up.railway.app/api/search-posts?search=${searchQuery}`, {
+      const response = await axios.get(`https://contact-book-backend-97yv.vercel.app/search-posts?search=${searchQuery}`, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -993,17 +993,6 @@ const DashboardContact = () => {
         </div>) }
 
         
-
-
-
-
-
-
-
-          
-        
-
-      
 
         </div>
     </>
