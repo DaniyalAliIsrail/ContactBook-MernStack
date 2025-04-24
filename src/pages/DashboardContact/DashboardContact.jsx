@@ -59,7 +59,54 @@ const DashboardContact = () => {
   // console.log(updateContact);
   // console.log(updateId);
   //close update modal
-  // const [updateModal, setUpdateModal] = useState(false);
+  // const [updateModal, setUpdateModal] = useState(false)
+
+  //search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQueryLength, setSearchQueryLength] = useState(0);
+  const [serchLoading, setSerchLoading] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
+
+  const handleSearch = async() => {
+    setSerchLoading(true);
+    const token = localStorage.getItem("token")
+    try {
+      const response = await axios.get(`http://localhost:8000/api/search-posts?search=${searchQuery}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("filter==>",response.data)
+      setFilteredData(response.data.data); // Assuming the backend returns `data` in the response
+      setSerchLoading(false);
+    } catch (err) {
+      // setError('Something went wrong while searching.');
+      console.log("error",err.message)
+    } finally {
+      setLoading(false);
+    }
+
+
+    // const filtered = allData.filter(
+    //   (item) =>
+    //     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //     item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //     item.contact.toLowerCase().includes(searchQuery.toLowerCase())
+    // );
+    // console.log("filter==>", filtered);
+    // setFilteredData(filtered);
+    // setSerchLoading(false);
+  };
+
+  // Clear filtered data if searchQuery is empty
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredData([]);
+    }
+  }, [searchQuery]);
 
   const closeUpdateModal = () => {
     setUpdate(!update);
@@ -67,7 +114,7 @@ const DashboardContact = () => {
 
   // ALl POST STATE
   const [allData, setAllData] = useState([]);
-  // console.log(allData);
+  console.log(allData);
   //DELID
   const [delId, setDelId] = useState(null);
   // console.log(delId);
@@ -144,10 +191,6 @@ const DashboardContact = () => {
     dashboardValid();
   }, []);
 
-  useEffect(() => {
-    allPostHandler();
-  }, []);
-
   //POSTSUBMIT
   const postSubmitHandler = async (e) => {
     e.preventDefault();
@@ -210,6 +253,10 @@ const DashboardContact = () => {
     }
   };
 
+  useEffect(() => {
+    allPostHandler();
+  }, []);
+
   // DELPOST
   const delPostHandler = async (id) => {
     const token = localStorage.getItem("token");
@@ -235,37 +282,6 @@ const DashboardContact = () => {
   };
 
   //SEARCH FUNCTIONALITY
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [searchQueryLength, setSearchQueryLength] = useState(0);
-  const [serchLoading, setSearchLoading] = useState(false);
-
-  const handleSearch = async () => {
-    try {
-      setSearchLoading(true);
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("Token not found in localStorage");
-        return;
-      }
-      const response = await axios.get(
-        `https://contact-book-backend-97yv.vercel.app/search-posts?search=${searchQuery}`,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setSearchResults(response.data.data);
-      setSearchLoading(false);
-      setErrorMessage("");
-    } catch (error) {
-      setErrorMessage("Error fetching search results");
-      console.error(error);
-      setSearchLoading(false);
-    }
-  };
 
   return (
     <>
@@ -319,26 +335,21 @@ const DashboardContact = () => {
                     label="Name"
                     type="text"
                     value={name}
-              
                   />
                   <Input
-                   
                     onChange={(e) => setEmail(e.target.value)}
                     color="purple"
                     label="Email"
                     type="email"
                     value={email}
-
                   />
 
                   <Input
-                    
                     onChange={(e) => setContact(e.target.value)}
                     color="purple"
                     label="contact"
                     type="number"
                     value={contact}
-
                   />
                   <Button
                     variant="gradient"
@@ -352,8 +363,6 @@ const DashboardContact = () => {
                       }}
                       type="file"
                       className="ms-0 mr-auto"
-                      
-
                     />
                   </Button>
                 </div>
@@ -374,85 +383,6 @@ const DashboardContact = () => {
               </DialogFooter>
             </form>
           </Dialog>
-
-          {/* <Dialog open={open} size="xs" handler={handleOpen}>
-            <div className="flex items-center justify-between">
-              <DialogHeader className="flex flex-col items-start">
-                <Typography className="text-base font-[0.6rem]" variant="h4">
-                  Create Contact
-                </Typography>
-              </DialogHeader>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="mr-3 h-5 w-5"
-                onClick={handleOpen}
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-
-            <form onSubmit={postSubmitHandler} className="flex flex-col gap-3">
-              <DialogBody>
-                <Typography
-                  className="mb-5 mt-0 text-[0.9rem] text-gray"
-                  variant="lead"
-                >
-                  Add new contact to your contact list
-                </Typography>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-3">
-                  <Input
-                    onChange={(e) => setName(e.target.value)}
-                    color="purple"
-                    label="Name"
-                    type="text"
-                    value={name}
-                  />
-                  <Input
-                    onChange={(e) => setEmail(e.target.value)}
-                    color="purple"
-                    label="Email"
-                    type="email"
-                    value={email}
-                  />
-                  <Input
-                    onChange={(e) => setContact(e.target.value)}
-                    color="purple"
-                    label="Contact"
-                    type="number"
-                    value={contact}
-                  />
-                  <Button variant="gradient" size="sm" color="purple">
-                    <input
-                      onChange={(e) => {
-                        fileHandler(e);
-                      }}
-                      type="file"
-                    />
-                  </Button>
-                </div>
-              </DialogBody>
-              <DialogFooter className="flex items-center justify-between">
-                <Button variant="text" color="gray" onClick={handleOpen}>
-                  Cancel
-                </Button>
-                {loading ? (
-                  <Button type="submit" variant="gradient" color="purple">
-                    Loading......
-                  </Button>
-                ) : (
-                  <Button type="submit" variant="gradient" color="purple">
-                    Create List
-                  </Button>
-                )}
-              </DialogFooter>
-            </form>
-          </Dialog> */}
         </div>
 
         {/* Search Bar */}
@@ -472,529 +402,262 @@ const DashboardContact = () => {
             }}
           ></input>
 
-          {errorMessage && (
-            <p style={{ color: "red", fontSize: "10px" }}> No result found</p>
-          )}
+          <button
+            onClick={() => handleSearch()}
+            className="flex flex-row items-center justify-center min-w-[100px] px-4 rounded-full font-sm tracking-wide border disabled:cursor-not-allowed disabled:opacity-50 ease-in-out duration-150 text-base bg-purple-500 text-white  border-transparent py-1.5 h-[38px] -mr-3 transform hover:scale-95 transition-transform"
+            // disabled={searchQueryLength === 0 || serchLoading}
+          >
+            {serchLoading ? "Searching..." : "Search"}
+          </button>
 
-          {serchLoading ? (
-            <button
-              className="flex flex-row items-center justify-center min-w-[100px] px-4 rounded-full font-sm tracking-wide border disabled:cursor-not-allowed disabled:opacity-50 ease-in-out duration-150 text-base bg-purple-500 text-white  border-transparent py-1.5 h-[38px] -mr-3 transform hover:scale-95 transition-transform"
-              onClick={() => {
-                handleSearch();
-              }}
-            >
-              Loading...
-            </button>
-          ) : (
-            <button
-              className="flex flex-row items-center justify-center min-w-[100px] px-4 rounded-full font-sm tracking-wide border disabled:cursor-not-allowed disabled:opacity-50 ease-in-out duration-150 text-base bg-purple-500 text-white  border-transparent py-1.5 h-[38px] -mr-3 transform hover:scale-95 transition-transform"
-              onClick={() => {
-                handleSearch();
-              }}
-            >
-              Search
-            </button>
-          )}
         </div>
 
-        {searchQueryLength > 0 ? (
-          <div>
-            <Card className="h-full w-full pt-3 mt-5 overflow-y-scroll overflow-x-scroll">
-              <table className="w-full min-w-max table-auto text-left">
-                <thead>
-                  <tr>
-                    {TABLE_HEAD.map((head) => (
-                      <th
-                        key={head}
-                        className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+        <div>
+          <Card className="h-full w-full pt-3 mt-5 overflow-y-scroll overflow-x-scroll border-green-700">
+            <table className="w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
                       >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {(searchQuery ? filteredData : allData).map((item, index) => {
+                  const isLast = index === TABLE_ROWS.length - 1;
+                  const classes = isLast
+                    ? "p-4"
+                    : "p-4 border-b border-blue-gray-50";
+
+                  return (
+                    <tr key={index}>
+                      <td className={classes}>
+                        <Avatar
+                          src={item.imageFile}
+                          alt="avatar"
+                          color="purple"
+                          withBorder={true}
+                          className="p-0.5"
+                        />
+                      </td>
+
+                      <td className={classes}>
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="font-normal leading-none opacity-70"
+                          className="font-normal"
                         >
-                          {head}
+                          {item.name}
                         </Typography>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {searchResults?.map((item, index) => {
-                    const isLast = index === TABLE_ROWS.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
+                      </td>
 
-                    return (
-                      <tr key={index}>
-                        <td className={classes}>
-                          <Avatar
-                            src={item.imageFile}
-                            alt="avatar"
-                            color="purple"
-                            withBorder={true}
-                            className="p-0.5"
-                          />
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {item.name}
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {item.email}
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {item.contact}
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {item.times}
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            as="a"
-                            href="#"
-                            variant="small"
-                            color="purple"
-                            className="font-medium"
-                            onClick={() => handleupdate(item)}
-                          >
-                            Edit
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            as="a"
-                            href="#"
-                            variant="small"
-                            color="red"
-                            className="font-medium"
-                            onClick={() => handleDel(item._id)}
-                          >
-                            Delete
-                          </Typography>
-                        </td>
-                      </tr>
-                    );
-                  })}
-
-                  {/* EDIT pop */}
-                  <Dialog open={update} size="xs" handler={handleupdate}>
-                    <div className="flex items-center justify-between">
-                      <DialogHeader className="flex flex-col items-start">
+                      <td className={classes}>
                         <Typography
-                          className=" text-2xl font-[10px]"
-                          variant="h2"
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
                         >
-                          Update Contact
+                          {item.email}
                         </Typography>
-                      </DialogHeader>
+                      </td>
+
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {item.contact}
+                        </Typography>
+                      </td>
+
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {item.times}
+                        </Typography>
+                      </td>
+
+                      <td className={classes}>
+                        <Typography
+                          as="a"
+                          href="#"
+                          variant="small"
+                          color="purple"
+                          className="font-medium"
+                          onClick={() => handleupdate(item)}
+                        >
+                          Edit
+                        </Typography>
+                      </td>
+
+                      <td className={classes}>
+                        <Typography
+                          as="a"
+                          href="#"
+                          variant="small"
+                          color="red"
+                          className="font-medium"
+                          onClick={() => handleDel(item._id)}
+                        >
+                          Delete
+                        </Typography>
+                      </td>
+                    </tr>
+                  );
+                })}
+
+                {/* EDIT pop */}
+                <Dialog open={update} size="xs" handler={handleupdate}>
+                  <div className="flex items-center justify-between">
+                    <DialogHeader className="flex flex-col items-start">
+                      <Typography
+                        className=" text-2xl font-[10px]"
+                        variant="h2"
+                      >
+                        Update Contact
+                      </Typography>
+                    </DialogHeader>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="mr-3 h-5 w-5"
+                      onClick={closeUpdateModal}
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <DialogBody>
+                    <Typography
+                      className="mb-5 -mt-7 text-[0.9rem] "
+                      color="gray"
+                      variant="lead"
+                    >
+                      update contact in your contact list
+                    </Typography>
+
+                    <div className="grid gap-3">
+                      <Input
+                        value={updateName}
+                        onChange={(e) => setUpdateName(e.target.value)}
+                        color="purple"
+                        label="Name"
+                      />
+                      <Input
+                        value={updateEmail}
+                        onChange={(e) => setUpdateEmail(e.target.value)}
+                        color="purple"
+                        label="Email"
+                      />
+                      <Input
+                        value={updateContact}
+                        onChange={(e) => setUpdateContact(e.target.value)}
+                        color="purple"
+                        label="contact"
+                      />
+                    </div>
+                  </DialogBody>
+                  <DialogFooter className="space-x-2">
+                    <Button
+                      variant="text"
+                      color="gray"
+                      onClick={closeUpdateModal}
+                    >
+                      cancel
+                    </Button>
+
+                    {updateLoading ? (
+                      <Button
+                        variant="gradient"
+                        color="purple"
+                        onClick={() => buttonupdateHandler()}
+                      >
+                        UPDATE LOADING..
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="gradient"
+                        color="purple"
+                        onClick={() => buttonupdateHandler()}
+                      >
+                        update contact
+                      </Button>
+                    )}
+                  </DialogFooter>
+                </Dialog>
+
+                {/* DELETE pop */}
+
+                {delId && (
+                  <Dialog size={"xs"} open={del} handler={handleDel}>
+                    <div className="w-14 text-center my-2 mx-auto">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
                         viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="mr-3 h-5 w-5"
-                        onClick={closeUpdateModal}
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        className="w-14 h-14"
+                        color="#FF2E2E"
                       >
                         <path
-                          fillRule="evenodd"
-                          d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                          clipRule="evenodd"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
                         />
                       </svg>
                     </div>
                     <DialogBody>
-                      <Typography
-                        className="mb-5 -mt-7 text-[0.9rem] "
-                        color="gray"
-                        variant="lead"
-                      >
-                        update contact in your contact list
-                      </Typography>
-
-                      <div className="grid gap-3">
-                        <Input
-                          value={updateName}
-                          onChange={(e) => setUpdateName(e.target.value)}
-                          color="purple"
-                          label="Name"
-                          type="text"
-                        />
-                        <Input
-                          value={updateEmail}
-                          onChange={(e) => setUpdateEmail(e.target.value)}
-                          color="purple"
-                          label="Email"
-                          type="email"
-                        />
-                        <Input
-                          value={updateContact}
-                          onChange={(e) => setUpdateContact(e.target.value)}
-                          color="purple"
-                          label="contact"
-                          type="number"
-                        />
-                      </div>
+                      Are you sure you want to delete this item
                     </DialogBody>
-                    <DialogFooter className="space-x-2">
-                      <Button
-                        variant="text"
-                        color="gray"
-                        onClick={closeUpdateModal}
-                      >
-                        cancel
-                      </Button>
+                    <div className="flex justify-center">
+                      <DialogFooter>
+                        <Button
+                          variant="text"
+                          color="purple"
+                          onClick={handleDel}
+                          className="mr-1"
+                        >
+                          <span>Cancel</span>
+                        </Button>
 
-                      {updateLoading ? (
                         <Button
                           variant="gradient"
-                          color="purple"
-                          onClick={() => buttonupdateHandler()}
+                          color="red"
+                          onClick={() => {
+                            delPostHandler(delId);
+                            handleDel();
+                          }}
                         >
-                          UPDATE LOADING..
+                          Delete
                         </Button>
-                      ) : (
-                        <Button
-                          variant="gradient"
-                          color="purple"
-                          onClick={() => buttonupdateHandler()}
-                        >
-                          update contact
-                        </Button>
-                      )}
-                    </DialogFooter>
-                  </Dialog>
-
-                  {/* DELETE pop */}
-
-                  {delId && (
-                    <Dialog size={"xs"} open={del} handler={handleDel}>
-                      <div className="w-14 text-center my-2 mx-auto">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="2"
-                          stroke="currentColor"
-                          className="w-14 h-14"
-                          color="#FF2E2E"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                          />
-                        </svg>
-                      </div>
-                      <DialogBody>
-                        Are you sure you want to delete this item
-                      </DialogBody>
-                      <div className="flex justify-center">
-                        <DialogFooter>
-                          <Button
-                            variant="text"
-                            color="purple"
-                            onClick={handleDel}
-                            className="mr-1"
-                          >
-                            <span>Cancel</span>
-                          </Button>
-
-                          <Button
-                            variant="gradient"
-                            color="red"
-                            onClick={() => {
-                              delPostHandler(delId);
-                              handleDel();
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        </DialogFooter>
-                      </div>
-                    </Dialog>
-                  )}
-                </tbody>
-              </table>
-            </Card>
-          </div>
-        ) : (
-          <div>
-            <Card className="h-full w-full pt-3 mt-5 overflow-y-scroll overflow-x-scroll border-green-700">
-              <table className="w-full min-w-max table-auto text-left">
-                <thead>
-                  <tr>
-                    {TABLE_HEAD.map((head) => (
-                      <th
-                        key={head}
-                        className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                      >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal leading-none opacity-70"
-                        >
-                          {head}
-                        </Typography>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {allData.map((item, index) => {
-                    const isLast = index === TABLE_ROWS.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
-
-                    return (
-                      <tr key={index}>
-                        <td className={classes}>
-                          <Avatar
-                            src={item.imageFile}
-                            alt="avatar"
-                            color="purple"
-                            withBorder={true}
-                            className="p-0.5"
-                          />
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {item.name}
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {item.email}
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {item.contact}
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {item.times}
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            as="a"
-                            href="#"
-                            variant="small"
-                            color="purple"
-                            className="font-medium"
-                            onClick={() => handleupdate(item)}
-                          >
-                            Edit
-                          </Typography>
-                        </td>
-
-                        <td className={classes}>
-                          <Typography
-                            as="a"
-                            href="#"
-                            variant="small"
-                            color="red"
-                            className="font-medium"
-                            onClick={() => handleDel(item._id)}
-                          >
-                            Delete
-                          </Typography>
-                        </td>
-                      </tr>
-                    );
-                  })}
-
-                  {/* EDIT pop */}
-                  <Dialog open={update} size="xs" handler={handleupdate}>
-                    <div className="flex items-center justify-between">
-                      <DialogHeader className="flex flex-col items-start">
-                        <Typography
-                          className=" text-2xl font-[10px]"
-                          variant="h2"
-                        >
-                          Update Contact
-                        </Typography>
-                      </DialogHeader>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="mr-3 h-5 w-5"
-                        onClick={closeUpdateModal}
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      </DialogFooter>
                     </div>
-                    <DialogBody>
-                      <Typography
-                        className="mb-5 -mt-7 text-[0.9rem] "
-                        color="gray"
-                        variant="lead"
-                      >
-                        update contact in your contact list
-                      </Typography>
-
-                      <div className="grid gap-3">
-                        <Input
-                          value={updateName}
-                          onChange={(e) => setUpdateName(e.target.value)}
-                          color="purple"
-                          label="Name"
-                        />
-                        <Input
-                          value={updateEmail}
-                          onChange={(e) => setUpdateEmail(e.target.value)}
-                          color="purple"
-                          label="Email"
-                        />
-                        <Input
-                          value={updateContact}
-                          onChange={(e) => setUpdateContact(e.target.value)}
-                          color="purple"
-                          label="contact"
-                        />
-                      </div>
-                    </DialogBody>
-                    <DialogFooter className="space-x-2">
-                      <Button
-                        variant="text"
-                        color="gray"
-                        onClick={closeUpdateModal}
-                      >
-                        cancel
-                      </Button>
-
-                      {updateLoading ? (
-                        <Button
-                          variant="gradient"
-                          color="purple"
-                          onClick={() => buttonupdateHandler()}
-                        >
-                          UPDATE LOADING..
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="gradient"
-                          color="purple"
-                          onClick={() => buttonupdateHandler()}
-                        >
-                          update contact
-                        </Button>
-                      )}
-                    </DialogFooter>
                   </Dialog>
-
-                  {/* DELETE pop */}
-
-                  {delId && (
-                    <Dialog size={"xs"} open={del} handler={handleDel}>
-                      <div className="w-14 text-center my-2 mx-auto">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="2"
-                          stroke="currentColor"
-                          className="w-14 h-14"
-                          color="#FF2E2E"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                          />
-                        </svg>
-                      </div>
-                      <DialogBody>
-                        Are you sure you want to delete this item
-                      </DialogBody>
-                      <div className="flex justify-center">
-                        <DialogFooter>
-                          <Button
-                            variant="text"
-                            color="purple"
-                            onClick={handleDel}
-                            className="mr-1"
-                          >
-                            <span>Cancel</span>
-                          </Button>
-
-                          <Button
-                            variant="gradient"
-                            color="red"
-                            onClick={() => {
-                              delPostHandler(delId);
-                              handleDel();
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        </DialogFooter>
-                      </div>
-                    </Dialog>
-                  )}
-                </tbody>
-              </table>
-            </Card>
-          </div>
-        )}
+                )}
+              </tbody>
+            </table>
+          </Card>
+        </div>
       </div>
     </>
   );
