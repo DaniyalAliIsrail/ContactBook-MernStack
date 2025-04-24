@@ -89,7 +89,7 @@ const DashboardContact = () => {
       setLoading(false);
     }
 
-
+   //frontend filter 
     // const filtered = allData.filter(
     //   (item) =>
     //     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
