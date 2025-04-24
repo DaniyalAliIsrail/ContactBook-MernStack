@@ -71,7 +71,7 @@ const DashboardContact = () => {
     setSerchLoading(true);
     const token = localStorage.getItem("token")
     try {
-      const response = await axios.get(`http://localhost:8000/api/search-posts?search=${searchQuery}`,
+      const response = await axios.get(`https://contact-book-backend-97yv.vercel.app/api/search-posts?search=${searchQuery}`,
         {
           headers: {
             authorization: `Bearer ${token}`,
